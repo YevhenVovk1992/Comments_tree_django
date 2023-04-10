@@ -1,0 +1,46 @@
+version: '3.1'
+
+services:
+  web:
+    build: .
+    command: >
+      sh -c "python3 manage.py migrate &&  
+             python3 manage.py loaddata fixtures/fueloperator.json --app fuel.fueloperator &&
+             python3 manage.py loaddata fixtures/fuel.json --app fuel.fuel &&
+             python3 manage.py loaddata fixtures/region.json --app fuel.region &&
+             python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file: .env
+    depends_on:
+      - db
+      - celery_worker
+
+  celery_worker:
+    build: .
+    restart: always
+    hostname: celery_worker
+    command: celery -A SPA_app worker --beat --scheduler django --loglevel=info
+
+  db:
+    image: 'postgres'
+    restart: always
+    hostname: 'postgres'
+    container_name: 'postgres_db'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+  rabbit:
+    image: 'rabbitmq'
+    hostname: 'rabbitmq'
+    restart: always
+    container_name: 'rabbitmq'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
