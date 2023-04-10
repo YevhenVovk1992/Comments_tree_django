@@ -91,6 +91,7 @@ DATABASES = {
 
 ACCOUNT_SIGNUP_FORM_CLASS = 'user.forms.SignupForm'
 LOGIN_URL = "/user/login/"
+LOGOUT_REDIRECT_URL = "/user/start_page"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
