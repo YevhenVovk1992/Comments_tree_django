@@ -1,0 +1,31 @@
+{% extends 'user/layout.html' %}
+
+
+{% block content %}
+<h1 class="title">
+  Welcome, {{ user.username }}!
+</h1>
+<div>
+    <div>
+        {% if user.profile.avatar %}
+            <img src="{{ user.profile.avatar.url }}" alt=""/>
+        {% endif %}
+    </div>
+    <ul>
+        <li>Login - {{ user.username }}</li>
+        <li>Email - {{ user.email }}</li>
+    </ul>
+    <p>
+        Upload photo to your account
+    </p>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            {{ p_form }}
+        </fieldset>
+        <div class="form-group">
+            <button class="button is-info is-middle">Update</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

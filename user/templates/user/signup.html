@@ -1,0 +1,50 @@
+{% extends 'user/layout.html' %}
+
+
+{% block content %}
+<div class="p-10 lg:p-20 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">Sign up</h1>
+</div>
+<div class="column is-4 is-offset-4">
+    <div class="box">
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="field">
+                <div class="control">
+                    {{ form.username }}
+                </div>
+            </div>
+
+             <div class="field">
+                <div class="control">
+                    {{ form.email }}
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    {{ form.password1 }}
+                </div>
+            </div>
+
+             <div class="field">
+                <div class="control">
+                    {{ form.password2 }}
+                </div>
+            </div>
+
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+              {% for field_errors in form.errors.values %}
+                {% for error in field_errors %}
+                  {{ error }}
+                {% endfor %}
+              {% endfor %}
+            </div>
+          {% endif %}
+            <button class="button is-block is-info is-large is-fullwidth">Submit</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
