@@ -19,9 +19,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from user import views as user_views
+
 
 urlpatterns = [
-    # path("", include("chat.urls", namespace="chat")),
+    path("", include("comments.urls", namespace="comments")),
+    path("start_page/", user_views.StartPageView.as_view(), name="start_page"),
     path('admin/', admin.site.urls),
     path("user/", include("user.urls", namespace="user"))
 ]
