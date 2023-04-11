@@ -1,4 +1,5 @@
 {% extends 'user/layout.html' %}
+{% load static %}
 
 
 {% block content %}
@@ -8,6 +9,7 @@
 </h1>
 <div class="w-full flex flex-wrap items-center">
     <div class="column is-4 is-offset-4">
+
     {% for blog in comments_block_list %}
         <div class="box">
             <p class="mb-1 text-2xl font-semibold">{{ blog.title }}</p><br>
@@ -15,11 +17,13 @@
 
             <a href="#" ><button class="button is-info is-middle">Connect</button></a>
         </div>
+
         {% empty %}
         <div class="w-full text-center">
             <h2 style="text-align:center;">There are no messages now :(</h2>
         </div>
     {% endfor %}
+
     </div>
 </div>
 

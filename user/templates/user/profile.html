@@ -1,7 +1,9 @@
 {% extends 'user/layout.html' %}
+{% load static %}
 
 
 {% block content %}
+
 <h1 class="title">
   Welcome, {{ user.username }}!
 </h1>
@@ -20,6 +22,7 @@
     </p>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+
         <fieldset class="form-group">
             {{ p_form }}
         </fieldset>
@@ -28,4 +31,5 @@
         </div>
     </form>
 </div>
+
 {% endblock %}

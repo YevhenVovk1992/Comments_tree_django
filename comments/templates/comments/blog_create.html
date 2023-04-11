@@ -1,7 +1,9 @@
 {% extends 'user/layout.html' %}
+{% load static %}
 
 
 {% block content %}
+
 <div class="p-10 lg:p-20 text-center">
     <h1 class="text-3xl lg:text-6xl text-white">Add new conversation</h1>
 </div>
@@ -31,7 +33,6 @@
             <button class="button is-block is-info is-large is-fullwidth">Create</button>
         </form>
 
-
         {% if form.errors %}
             <div class="alert alert-danger" role="alert">
               {% for field_errors in form.errors.values %}
@@ -41,6 +42,8 @@
               {% endfor %}
             </div>
         {% endif %}
+
     </div>
 </div>
+
 {% endblock %}

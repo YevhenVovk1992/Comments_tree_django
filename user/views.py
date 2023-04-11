@@ -41,6 +41,8 @@ class SignUpView(View):
 class LoginView(View):
 
     def get(self, request):
+        if self.request.user.is_authenticated:
+            return redirect(reverse("user:user_profile"))
         form = LoginForm()
         return render(request, "user/login.html", {"form": form})
 

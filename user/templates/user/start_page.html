@@ -1,7 +1,9 @@
 {% extends 'user/layout.html' %}
+{% load static %}
 
 
 {% block content %}
+
     <h1 class="title">
       SPA CHAT
     </h1>
@@ -9,7 +11,8 @@
         First login or registration user
     </h2>
     <button class="btn btn-primary" onclick="window.location.href='{% url "user:login" %}'">
-            <i class="fa fa-sign-in"></i> Log in
+        <i class="fa fa-sign-in"></i> Log in
     </button>
+
 {% endblock %}
 
