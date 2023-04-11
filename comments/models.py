@@ -7,6 +7,7 @@ from utils.CustomValidators import html_tag_validate
 
 class BlogPost(models.Model):
     title = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     create_at = models.DateTimeField(editable=False, auto_now_add=True)
 
     def __str__(self):
@@ -20,7 +21,7 @@ class BlogPost(models.Model):
 
 
 class CommentModel(models.Model):
-    blog = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
+    chat = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField()
     image = models.FileField(blank=True, null=True)

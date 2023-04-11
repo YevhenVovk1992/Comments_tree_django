@@ -21,8 +21,8 @@
                     <div id="navbarMenuHeroA" class="navbar-menu">
                         <div class="navbar-end">
                             {% if request.user.is_authenticated %}
-                                <a href="#" class="navbar-item">Create chat room</a>
-                                <a href="#" class="navbar-item">Comments</a>
+                                <a href="{% url "comments:create_chat" %}" class="navbar-item">Create chat</a>
+                                <a href="{% url "comments:chats_list" %}" class="navbar-item">Comments</a>
                                 <a href="{% url "user:user_profile" %}" class="navbar-item">Profile</a>
                                 <a href="{% url "user:logout" %}" class="navbar-item">Log out</a>
                             {% else %}
