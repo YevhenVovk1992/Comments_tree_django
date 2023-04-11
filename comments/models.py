@@ -16,7 +16,7 @@ class BlogPost(models.Model):
     def to_dict(self):
         return {
             'title': self.title,
-            'created': self.create_at
+            'create_at': str(self.create_at)[:10]
         }
 
 

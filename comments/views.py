@@ -16,6 +16,7 @@ class ChatListView(View):
         """
         queryset = models.BlogPost.objects.all()
         comments_block_list = [i.to_dict() for i in queryset]
+        print(comments_block_list)
         context = {
             'comments_block_list': comments_block_list
         }

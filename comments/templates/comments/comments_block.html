@@ -7,20 +7,20 @@
   Welcome, {{ user.username }}!
 </h1>
 <div class="w-full flex flex-wrap items-center">
+    <div class="column is-4 is-offset-4">
     {% for blog in comments_block_list %}
-        <div class="w-full lg:w-1/4 px-3 py-3">
-            <div class="p-4 bg-white shadow rounded-xl text-center">
-                <h2 class="mb-1 text-2xl font-semibold">{{ blog.title }}</h2><br>
-                <h2 class="mb-1 text-xs font-semibold">{{ blog.create_at }}</h2>
+        <div class="box">
+            <p class="mb-1 text-2xl font-semibold">{{ blog.title }}</p><br>
+            <p class="mb-1 text-xs font-semibold">{{ blog.create_at }}</p>
 
-                <a href="#" class="px-5 py-3 block rounded-xl text-white bg-teal-600 hover:bg-teal-700">Join</a>
-            </div>
+            <a href="#" ><button class="button is-info is-middle">Connect</button></a>
         </div>
         {% empty %}
-          <div class="w-full text-center">
+        <div class="w-full text-center">
             <h2 style="text-align:center;">There are no messages now :(</h2>
-          </div>
+        </div>
     {% endfor %}
+    </div>
 </div>
 
 {% endblock %}
