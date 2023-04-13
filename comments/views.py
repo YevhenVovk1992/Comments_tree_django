@@ -1,4 +1,3 @@
-from django.views import generic
 from django.views import View
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
@@ -16,7 +15,6 @@ class ChatListView(View):
         """
         queryset = models.BlogPost.objects.all()
         comments_block_list = [i.to_dict() for i in queryset]
-        print(comments_block_list)
         context = {
             'comments_block_list': comments_block_list
         }
@@ -40,7 +38,7 @@ class ChatCreate(FormView):
                 text=text,
                 email=user.email
             )
-            # return redirect()
+            return redirect("comments:chats_list")
 
         except ValidationError as e:
             form.add_error(None, e)
@@ -48,3 +46,30 @@ class ChatCreate(FormView):
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class CommentsView(View):
+    def get(self, request, pk):
+        chat = models.BlogPost.objects.get(pk=pk)
+        comments = models.Message.objects.filter(chat=pk).order_by("create_at").all()
+        self.request.session['chat'] = chat.id
+        context = {"chat": chat, "comments": comments}
+        return render(request, "comments/chat.html", context)
+
+    def post(self, request, pk):
+        comment = self.request.POST.get('text')
+        file = self.request.FILES.get('file')
+        user = self.request.user
+        chat = models.BlogPost.objects.filter(id=self.request.session.get('chat')).first()
+        try:
+            models.Message.objects.create(
+                user=user,
+                chat=chat,
+                text=comment,
+                email=user.email,
+                image=file
+            )
+        except ValidationError:
+            pass
+        return redirect("comments:comments", pk=pk)
+

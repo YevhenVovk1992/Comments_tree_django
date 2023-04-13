@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
 from django.db import models
@@ -15,6 +14,7 @@ class BlogPost(models.Model):
 
     def to_dict(self):
         return {
+            'pk': self.id,
             'title': self.title,
             'create_at': str(self.create_at)[:10]
         }
@@ -39,8 +39,10 @@ class CommentModel(models.Model):
 
 
 class Message(CommentModel):
-    answers = models.ManyToManyField("Answer", related_name="comments")
+    parent = models.ForeignKey(
+        'self',
+        blank=True, null=True,
+        on_delete=models.CASCADE,
+        related_name='replies',
+    )
 
-
-class Answer(CommentModel):
-    pass

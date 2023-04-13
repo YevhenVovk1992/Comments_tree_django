@@ -13,3 +13,4 @@ class CreateBlogForm(forms.ModelForm):
     class Meta:
         model = BlogPost
         fields = ["title"]
+

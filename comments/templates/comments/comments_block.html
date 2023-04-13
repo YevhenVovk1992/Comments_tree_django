@@ -14,8 +14,7 @@
         <div class="box">
             <p class="mb-1 text-2xl font-semibold">{{ blog.title }}</p><br>
             <p class="mb-1 text-xs font-semibold">{{ blog.create_at }}</p>
-
-            <a href="#" ><button class="button is-info is-middle">Connect</button></a>
+            <a href="{% url "comments:comments" pk=blog.pk %}"><button class="button is-info is-middle">Connect</button></a>
         </div>
 
         {% empty %}
