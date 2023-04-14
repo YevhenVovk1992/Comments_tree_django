@@ -59,17 +59,27 @@ class CommentsView(View):
     def post(self, request, pk):
         comment = self.request.POST.get('text')
         file = self.request.FILES.get('file')
+        parent = models.Message.objects.filter(id=self.request.POST.get('parent')).first()
         user = self.request.user
         chat = models.BlogPost.objects.filter(id=self.request.session.get('chat')).first()
         try:
-            models.Message.objects.create(
-                user=user,
-                chat=chat,
-                text=comment,
-                email=user.email,
-                image=file
-            )
+            if not parent:
+                models.Message.objects.create(
+                    user=user,
+                    chat=chat,
+                    text=comment,
+                    email=user.email,
+                    image=file
+                )
+            else:
+                models.Message.objects.create(
+                    user=user,
+                    chat=chat,
+                    text=comment,
+                    email=user.email,
+                    parent=parent,
+                    image=file
+                )
         except ValidationError:
             pass
         return redirect("comments:comments", pk=pk)
-

@@ -3,6 +3,13 @@
 
 
 {% block content %}
+<div class="p-10 lg:p-20 text-center">
+    <h2 class="text-3xl lg:text-6xl text-white">{{ chat.title }}</h2>
+    <span class="message-date" style="color: #499; font-size: 12px">
+        {{ chat.create_at|date:"j F Y H:i" }}
+    </span>
+</div>
+
 <div class="w-full flex flex-wrap items-center">
     <div class="column is-10 is-offset-0">
         {% for comment in comments %}
@@ -24,38 +31,52 @@
                          alt="image"/>
                   </a>
                 {% endif %}
-                <button class="button is-info is-middle" style="margin-left: 50%">Reply</button>
+
+                 <form method="post" action="" class="inline-flex" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="parent" value="{{ comment.pk }}">
+                    <label for="chat-message-input"></label>
+                    <input type="text" id="chat-message-input" name="text" style="width: 500px"  placeholder="Answer...">
+                    <input type="file" name="file" style="margin: 10px" id="chat-file-input">
+                    <button class="button is-info is-middle" style="margin-left: 50%">Reply</button>
+                  </form>
+
             </div>
                  {% for i in comment.replies.all %}
                      <div class="box" style="text-align: left; margin-left: 10%">
-                            <span class="message-date" style="color: #999; font-size: 12px">
-                                {{ i.create_at|date:"j F Y H:i" }}
-                            </span>
-                            <div>{{ i.email }} - {{ i.user }}
-                                {% if i.user.profile.avatar %}
-                                    <img src="{{ i.user.profile.avatar.url }}" alt="" style="height: 35px"/>
-                                {% endif %}
-                            </div>
-                            <h3>{{ i.text }}</h3>
-                            {% if i.image %}
-                              <a class="fancybox" href="{{ i.image.url }}">
-                                <img style="border-radius: 10%; margin-left: 10px" src="{{ i.image.url }}"
-                                     alt="image"/>
-                              </a>
+                        <div>
+                            <p>{{ comment.text }}</p>
+                            <hr>
+                        </div>
+                        <span class="message-date" style="color: #999; font-size: 12px">
+                            {{ i.create_at|date:"j F Y H:i" }}
+                        </span>
+                        <div>{{ i.email }} - {{ i.user }}
+                            {% if i.user.profile.avatar %}
+                                <img src="{{ i.user.profile.avatar.url }}" alt="" style="height: 35px"/>
                             {% endif %}
                         </div>
+                        <h3>{{ i.text }}</h3>
+                        {% if i.image %}
+                          <a class="fancybox" href="{{ i.image.url }}">
+                            <img style="border-radius: 10%; margin-left: 10px" src="{{ i.image.url }}"
+                                 alt="image"/>
+                          </a>
+                        {% endif %}
+                     </div>
                  {% endfor %}
             {% endif %}
         {% endfor %}
     </div>
-
-     <form method="post" action="" class="inline-flex" enctype="multipart/form-data">
-         {% csrf_token %}
-        <label for="chat-message-input"></label>
-        <input type="text" id="chat-message-input" name="text" style="width: 500px"  placeholder="Your message...">
-        <input type="file" name="file" style="margin: 10px" id="chat-file-input">
-        <button class="button is-info is-middle">Create comment</button>
-      </form>
-
+     <div class="column is-10 is-offset-0">
+         <form method="post" action="" class="inline-flex" enctype="multipart/form-data">
+             {% csrf_token %}
+             <input type="hidden" name="parent" value="">
+            <label for="chat-message-input"></label>
+            <input type="text" id="chat-message-input" name="text" style="width: 500px"  placeholder="Your comment...">
+            <input type="file" name="file" style="margin: 10px" id="chat-file-input">
+            <button class="button is-info is-middle">Create comment</button>
+          </form>
+     </div>
 </div>
 {% endblock %}
