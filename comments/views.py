@@ -1,4 +1,4 @@
-from django.views import View
+from django.views import View, generic
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.views.generic import FormView
@@ -11,13 +11,19 @@ class ChatListView(View):
 
     def get(self, request):
         """
-        Get the list of the comment block
+        Get the list of the comment's block. Use the sort form.
         """
-        user = self.request.user
-        queryset = models.BlogPost.objects.filter(user=user).all()
-        comments_block_list = [i.to_dict() for i in queryset]
+        form = forms.SortedForm()
+        sorted_value = self.request.GET.get('sorted_value')
+        order = self.request.GET.get('order')
+        queryset = models.BlogPost.objects.select_related('user').order_by('-create_at').all()
+        if sorted_value:
+            queryset = models.BlogPost.objects.select_related('user').order_by(order + sorted_value).all()
+            form.initial['order'] = order
+            form.initial['sorted_value'] = sorted_value
         context = {
-            'comments_block_list': comments_block_list
+            'comments_block_list': queryset,
+            'form': form
         }
         return render(request, "comments/comments_block.html", context)
 

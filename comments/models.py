@@ -12,13 +12,6 @@ class BlogPost(models.Model):
     def __str__(self):
         return self.title
 
-    def to_dict(self):
-        return {
-            'pk': self.id,
-            'title': self.title,
-            'create_at': str(self.create_at)[:10]
-        }
-
 
 class CommentModel(models.Model):
     chat = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
