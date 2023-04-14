@@ -13,7 +13,8 @@ class ChatListView(View):
         """
         Get the list of the comment block
         """
-        queryset = models.BlogPost.objects.all()
+        user = self.request.user
+        queryset = models.BlogPost.objects.filter(user=user).all()
         comments_block_list = [i.to_dict() for i in queryset]
         context = {
             'comments_block_list': comments_block_list
@@ -57,11 +58,13 @@ class CommentsView(View):
         return render(request, "comments/chat.html", context)
 
     def post(self, request, pk):
+        user = self.request.user
         comment = self.request.POST.get('text')
         file = self.request.FILES.get('file')
-        parent = models.Message.objects.filter(id=self.request.POST.get('parent')).first()
-        user = self.request.user
-        chat = models.BlogPost.objects.filter(id=self.request.session.get('chat')).first()
+        chat_id = self.request.session.get('chat')
+        parent_id = self.request.POST.get('parent')
+        parent = models.Message.objects.filter(id=parent_id).first() if parent_id else None
+        chat = models.BlogPost.objects.filter(id=chat_id).first()
         try:
             if not parent:
                 models.Message.objects.create(
