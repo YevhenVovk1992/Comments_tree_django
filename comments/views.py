@@ -1,19 +1,21 @@
-from django.views import View, generic
+from django.views import View
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.views.generic import FormView
 
 from comments import models, forms
+from utils.CustomPaginator import PagePaginator
 
 
-# Create your views here.
 class ChatListView(View):
 
     def get(self, request):
         """
         Get the list of the comment's block. Use the sort form.
+        Create paginator.
         """
         form = forms.SortedForm()
+        page_number = self.request.GET.get("page", 1)
         sorted_value = self.request.GET.get('sorted_value')
         order = self.request.GET.get('order')
         queryset = models.BlogPost.objects.select_related('user').order_by('-create_at').all()
@@ -21,14 +23,22 @@ class ChatListView(View):
             queryset = models.BlogPost.objects.select_related('user').order_by(order + sorted_value).all()
             form.initial['order'] = order
             form.initial['sorted_value'] = sorted_value
+        paginator = PagePaginator(queryset, 3)
+        page = paginator.page_obj(page_number)
         context = {
-            'comments_block_list': queryset,
-            'form': form
+            'comments_block_list': page.object_list,
+            'form': form,
+            "page": page,
+            "paginator": paginator,
+            "total_pages": len(paginator)
         }
         return render(request, "comments/comments_block.html", context)
 
 
 class ChatCreate(FormView):
+    """
+    Create chat for comments and add first comment to it.
+    """
     template_name = "comments/blog_create.html"
     form_class = forms.CreateBlogForm
 
@@ -56,6 +66,10 @@ class ChatCreate(FormView):
 
 
 class CommentsView(View):
+    """
+    Display all comments in the chat. Answer to the comment.
+    Create new comment in the blog.
+    """
     def get(self, request, pk):
         chat = models.BlogPost.objects.get(pk=pk)
         comments = models.Message.objects.filter(chat=pk).order_by("create_at").all()
