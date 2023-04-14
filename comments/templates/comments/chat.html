@@ -68,7 +68,7 @@
             {% endif %}
         {% endfor %}
     </div>
-     <div class="column is-10 is-offset-0">
+    <div class="box column is-offset-0">
          <form method="post" action="" class="inline-flex" enctype="multipart/form-data">
              {% csrf_token %}
              <input type="hidden" name="parent" value="">
@@ -78,5 +78,36 @@
             <button class="button is-info is-middle">Create comment</button>
           </form>
      </div>
+
+    {% if paginator.is_paginate %}
+
+        {% if page.has_previous %}
+           <div class="card-body text-center">
+                <a class="btn btn-primary" href="?page={{ page.previous_page_number }}">Previous Page</a>
+           </div>
+
+        {% else %}
+            <div class="card-body text-center">
+                <a class="btn btn-dark" href="#">Previous Page</a>
+           </div>
+
+        {% endif %}
+        <div class="card-body text-center">
+            {{ page.number }}/{{ total_pages }}
+        </div>
+
+        {% if page.has_next %}
+            <div class="card-body text-center">
+                <a class="btn btn-primary" href="?page={{ page.next_page_number }}">Next Page</a>
+            </div>
+
+        {% else %}
+            <div class="card-body text-center">
+                <a class="btn btn-dark" href="">Next Page</a>
+            </div>
+
+        {% endif %}
+
+    {% endif %}
 </div>
 {% endblock %}

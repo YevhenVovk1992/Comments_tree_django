@@ -71,10 +71,19 @@ class CommentsView(View):
     Create new comment in the blog.
     """
     def get(self, request, pk):
+        page_number = self.request.GET.get("page", 1)
         chat = models.BlogPost.objects.get(pk=pk)
         comments = models.Message.objects.filter(chat=pk).order_by("create_at").all()
         self.request.session['chat'] = chat.id
-        context = {"chat": chat, "comments": comments}
+        paginator = PagePaginator(comments, 3)
+        page = paginator.page_obj(page_number)
+        context = {
+            "chat": chat,
+            "comments": page.object_list,
+            "page": page,
+            "paginator": paginator,
+            "total_pages": len(paginator)
+        }
         return render(request, "comments/chat.html", context)
 
     def post(self, request, pk):
