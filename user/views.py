@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 
@@ -41,7 +43,7 @@ class SignUpView(View):
 class LoginView(View):
 
     def get(self, request):
-        if self.request.user.is_authenticated:
+        if request.user.is_authenticated:
             return redirect(reverse("user:user_profile"))
         form = LoginForm()
         return render(request, "user/login.html", {"form": form})
@@ -70,9 +72,13 @@ class UserProfileView(View):
         return render(request, 'user/profile.html', context)
 
     def post(self, request):
+        user = request.user
+        old_avatar = user.profile.avatar
         profile_form = ProfileUpdateForm(request.POST,
                                          request.FILES,
-                                         instance=request.user.profile)
+                                         instance=user.profile)
         if profile_form.is_valid():
             profile_form.save()
-            return redirect(reverse("user:user_profile"))
+            if old_avatar:
+                os.remove(old_avatar.path)
+        return redirect(reverse("user:user_profile"))

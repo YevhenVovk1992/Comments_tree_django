@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
-from PIL import Image
+
+from utils.ChangeFile import ImageEditor
 
 
 class Profile(models.Model):
@@ -12,12 +13,5 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         super().save()
-        try:
-            img = Image.open(self.avatar.path)
-        except ValueError:
-            pass
-        else:
-            if img.height > 300 or img.width > 300:
-                output_size = (300, 300)
-                img.thumbnail(output_size)
-            img.save(self.avatar.path)
+        if self.avatar:
+            ImageEditor.reduce_image(self.avatar.path, 240, 160)
