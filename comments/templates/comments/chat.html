@@ -35,10 +35,17 @@
                 <h3>{{ comment.text }}</h3>
 
                 {% if comment.image %}
-                  <a class="fancybox" href="{{ comment.image.url }}">
-                    <img style="border-radius: 10%; margin-left: 10px" src="{{ comment.image.url }}"
-                         alt="image"/>
-                  </a>
+                    {% if comment.extension == '.txt' %}
+                        <a href="{{ comment.image.url }}" >
+                        <img style="width: 50px;height: 50px;border-radius: 50%; margin-right: 5px" src="{% static "comments/img/file_icon.jpeg" %}" alt="image"/>
+                        download
+                        </a>
+                    {% else %}
+                        <a class="fancybox" href="{{ comment.image.url }}">
+                        <img style="border-radius: 10%; margin-left: 10px" src="{{ comment.image.url }}"
+                             alt="image"/>
+                        </a>
+                    {% endif %}
                 {% endif %}
 
                  <form method="post" action="" class="inline-flex" enctype="multipart/form-data">
@@ -65,12 +72,22 @@
                             {% endif %}
                         </div>
                         <h3>{{ i.text }}</h3>
+
+
                         {% if i.image %}
-                          <a class="fancybox" href="{{ i.image.url }}">
-                            <img style="border-radius: 10%; margin-left: 10px" src="{{ i.image.url }}"
-                                 alt="image"/>
-                          </a>
+                            {% if i.extension == '.txt' %}
+                                <a href="{{ i.image.url }}" >
+                                <img style="width: 50px;height: 50px;border-radius: 50%; margin-right: 5px" src="{% static "comments/img/file_icon.jpeg" %}" alt="image"/>
+                                download
+                                </a>
+                            {% else %}
+                                <a class="fancybox" href="{{ i.image.url }}">
+                                <img style="border-radius: 10%; margin-left: 10px" src="{{ i.image.url }}"
+                                     alt="image"/>
+                                </a>
+                            {% endif %}
                         {% endif %}
+
                      </div>
                  {% endfor %}
             {% endif %}

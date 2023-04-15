@@ -1,3 +1,5 @@
+import os.path
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -50,3 +52,11 @@ class Message(CommentModel):
         super().save(*args, **kwargs)
         if self.image:
             ImageEditor.reduce_image(self.image.path, 320, 240)
+
+    def extension(self) -> str:
+        """
+        Get file format in the template
+        :return: str
+        """
+        name, extension = os.path.splitext(self.image.name)
+        return extension
