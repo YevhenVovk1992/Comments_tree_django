@@ -2,6 +2,7 @@ from captcha.fields import ReCaptchaField
 from django import forms
 
 from comments.models import BlogPost
+from utils.CustomValidators import html_tag_validate
 
 
 class CreateBlogForm(forms.ModelForm):
@@ -10,6 +11,7 @@ class CreateBlogForm(forms.ModelForm):
     """
     captcha = ReCaptchaField()
     title = forms.CharField(
+        validators=(html_tag_validate, ),
         widget=forms.TextInput(attrs={"placeholder": "Title", "class": "input is-large"})
     )
 

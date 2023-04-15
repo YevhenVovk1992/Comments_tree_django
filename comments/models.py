@@ -18,7 +18,7 @@ class CommentModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField()
     image = models.FileField(blank=True, null=True)
-    text = models.TextField(max_length=300)
+    text = models.TextField(max_length=300, validators=[html_tag_validate])
     create_at = models.DateTimeField(editable=False, auto_now_add=True)
 
     def __str__(self):
@@ -39,3 +39,9 @@ class Message(CommentModel):
         related_name='replies',
     )
 
+    def clean(self):
+        html_tag_validate(self.text)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)

@@ -23,7 +23,7 @@ class ChatListView(View):
             queryset = models.BlogPost.objects.select_related('user').order_by(order + sorted_value).all()
             form.initial['order'] = order
             form.initial['sorted_value'] = sorted_value
-        paginator = PagePaginator(queryset, 3)
+        paginator = PagePaginator(queryset, 25)
         page = paginator.page_obj(page_number)
         context = {
             'comments_block_list': page.object_list,
@@ -42,22 +42,27 @@ class ChatCreate(FormView):
     template_name = "comments/blog_create.html"
     form_class = forms.CreateBlogForm
 
+    def __init__(self):
+        super().__init__()
+        self.chat = None
+
     def form_valid(self, form):
         user = self.request.user
         text = self.request.POST.get('text_message')
         try:
-            chat = form.save(commit=False)
-            chat.user = user
-            chat.save()
+            self.chat = form.save(commit=False)
+            self.chat.user = user
+            self.chat.save()
             models.Message.objects.create(
                 user=user,
-                chat=chat,
+                chat=self.chat,
                 text=text,
                 email=user.email
             )
             return redirect("comments:chats_list")
-
         except ValidationError as e:
+            if self.chat:
+                models.BlogPost.objects.filter(id=self.chat.id).delete()
             form.add_error(None, e)
             return self.form_invalid(form)
 
@@ -75,7 +80,7 @@ class CommentsView(View):
         chat = models.BlogPost.objects.get(pk=pk)
         comments = models.Message.objects.filter(chat=pk).order_by("create_at").all()
         self.request.session['chat'] = chat.id
-        paginator = PagePaginator(comments, 3)
+        paginator = PagePaginator(comments, 25)
         page = paginator.page_obj(page_number)
         context = {
             "chat": chat,
