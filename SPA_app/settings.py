@@ -140,9 +140,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Celery settings
-CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-
 # Recaptcha keys
 RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+

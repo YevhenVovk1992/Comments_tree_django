@@ -2,6 +2,7 @@ from django.views import View
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.views.generic import FormView
+from django.contrib import messages
 
 from comments import models, forms
 from utils.CustomPaginator import PagePaginator
@@ -76,10 +77,10 @@ class CommentsView(View):
     Create new comment in the blog.
     """
     def get(self, request, pk):
-        page_number = self.request.GET.get("page", 1)
+        page_number = request.GET.get("page", 1)
         chat = models.BlogPost.objects.get(pk=pk)
         comments = models.Message.objects.filter(chat=pk).order_by("create_at").all()
-        self.request.session['chat'] = chat.id
+        request.session['chat'] = chat.id
         paginator = PagePaginator(comments, 25)
         page = paginator.page_obj(page_number)
         context = {
@@ -92,16 +93,16 @@ class CommentsView(View):
         return render(request, "comments/chat.html", context)
 
     def post(self, request, pk):
-        user = self.request.user
-        comment = self.request.POST.get('text')
-        file = self.request.FILES.get('file')
-        chat_id = self.request.session.get('chat')
-        parent_id = self.request.POST.get('parent')
+        user = request.user
+        comment = request.POST.get('text')
+        file = request.FILES.get('file')
+        chat_id = request.session.get('chat')
+        parent_id = request.POST.get('parent')
         parent = models.Message.objects.filter(id=parent_id).first() if parent_id else None
         chat = models.BlogPost.objects.filter(id=chat_id).first()
         try:
             if not parent:
-                models.Message.objects.create(
+                instance = models.Message(
                     user=user,
                     chat=chat,
                     text=comment,
@@ -109,7 +110,7 @@ class CommentsView(View):
                     image=file
                 )
             else:
-                models.Message.objects.create(
+                instance = models.Message(
                     user=user,
                     chat=chat,
                     text=comment,
@@ -117,6 +118,9 @@ class CommentsView(View):
                     parent=parent,
                     image=file
                 )
-        except ValidationError:
-            pass
+            instance.save()
+        except ValidationError as form_error:
+            msg = form_error.message
+            messages.error(request, msg)
+            return redirect("comments:comments", pk)
         return redirect("comments:comments", pk=pk)

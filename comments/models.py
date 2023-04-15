@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
-
 from django.db import models
-from utils.CustomValidators import html_tag_validate
+
+from utils.CustomValidators import html_tag_validate, file_validator
+from utils.ChangeFile import ImageEditor
 
 
 class BlogPost(models.Model):
@@ -17,8 +18,8 @@ class CommentModel(models.Model):
     chat = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField()
-    image = models.FileField(blank=True, null=True)
-    text = models.TextField(max_length=300, validators=[html_tag_validate])
+    image = models.FileField(blank=True, null=True, upload_to='comment_images')
+    text = models.TextField(max_length=300)
     create_at = models.DateTimeField(editable=False, auto_now_add=True)
 
     def __str__(self):
@@ -40,8 +41,12 @@ class Message(CommentModel):
     )
 
     def clean(self):
+        if self.image:
+            file_validator(self.image)
         html_tag_validate(self.text)
 
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
+        if self.image:
+            ImageEditor.reduce_image(self.image.path, 320, 240)
