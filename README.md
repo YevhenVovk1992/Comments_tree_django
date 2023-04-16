@@ -1,10 +1,11 @@
 # Comments service
 ### System for adding comments
-### Link - [comments-app-vovkdev.herokuapp.com/start_page/]([http://host/start_page](https://comments-app-vovkdev.herokuapp.com/start_page/))
+### Link - [comments-app-vovkdev.herokuapp.com/start_page/](https://comments-app-vovkdev.herokuapp.com/start_page/)
 ![Screenshot from 2023-04-15 10-35-03](https://user-images.githubusercontent.com/104986485/232308608-0d0b0fee-4263-4092-9127-d101e3035c52.png)
 ![Screenshot from 2023-04-15 16-31-23](https://user-images.githubusercontent.com/104986485/232308637-ccc12c52-a614-4280-8cfd-055b7e0e31d7.png)
 ![Screenshot from 2023-04-15 10-35-40](https://user-images.githubusercontent.com/104986485/232308702-dc40d65a-c9d1-4338-9700-631287dd503d.png)
 ![Screenshot from 2023-04-15 16-32-28](https://user-images.githubusercontent.com/104986485/232308660-f2f6ccbe-d395-4f10-b53d-8c7842bd50d0.png)
+![auth_group](https://user-images.githubusercontent.com/104986485/232308830-082dfeca-756a-4c60-b383-418e30f5a3f3.png)
 ___
 ## Content
  - [Technologies](#what-we-used)
